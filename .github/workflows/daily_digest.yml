@@ -1,0 +1,28 @@
+name: AI Daily Digest
+
+on:
+  schedule:
+    # 每天早上9:30（北京时间 = UTC 1:30）
+    - cron: '30 1 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  send-digest:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Run AI Digest Script
+      env:
+        FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+        FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+        FEISHU_USER_ID: ${{ secrets.FEISHU_USER_ID }}
+      run: |
+        python ai_daily_digest.py
